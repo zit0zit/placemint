@@ -1,0 +1,13 @@
+{
+  "name": "placemint",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "frontend"
+  ],
+  "scripts": {
+    "backend": "(cd ./services; ./manage.py runserver)",
+    "frontend": "yarn workspace frontend run dev"
+  },
+  "license": "MIT"
+}
