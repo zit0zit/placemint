@@ -7,7 +7,12 @@
   ],
   "scripts": {
     "backend": "(cd ./services; ./manage.py runserver)",
-    "frontend": "yarn workspace frontend run dev"
+    "frontend": "yarn workspace frontend run dev",
+    "build": "yarn workspace frontend run build"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "semi": false
   },
   "license": "MIT"
 }
