@@ -1,7 +1,7 @@
-from rest_framework import viewsets, exceptions, mixins, status
+from rest_framework import viewsets, exceptions, mixins
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import api_view, action
+from rest_framework.decorators import action
 from drf_yasg.utils import swagger_auto_schema
 
 from . import models
@@ -27,13 +27,15 @@ class UserViewSet(
 
     def get_permissions(self):
         print(self.action)
-        if self.action in ['update', 'partial_update', 'destroy']:
+        if self.action == 'get':
+            return [IsAuthenticated()]
+        elif self.action in ['update', 'partial_update', 'destroy']:
             return [IsAuthenticated(), models.User.IsSameUser()]
         else:
             return super(UserViewSet, self).get_permissions()
 
     @swagger_auto_schema(methods=['POST'], request_body=AuthSerializer)
-    @action(['POST'], False, 'auth', 'auth')
+    @action(['POST'], False)
     def auth(self, req, *args, **kwargs):
         auth = serializers.UserSerializer(data=req.data)
 
@@ -45,5 +47,10 @@ class UserViewSet(
             raise exceptions.AuthenticationFailed('invalid token')
 
         return Response({
-            'token': token
+            'token': token,
+            'user': serializers.UserSerializer(user).data,
         })
+
+    @action(['GET'], False)
+    def get(self, req, *args, **kwargs):
+        return Response(serializers.UserSerializer(req.user).data)

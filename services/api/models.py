@@ -33,7 +33,13 @@ class User(IdModel):
     is_employer = models.BooleanField(default=False, editable=False)
 
     def __str__(self):
-        return self.name
+        return f'''
+User:
+  Id: {self.id}
+  Name: {self.name}
+  Email: {self.email}
+  IsEmployer: {self.is_employer}
+'''
 
     @property
     def is_anonymous(self):
