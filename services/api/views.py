@@ -11,11 +11,9 @@ from . import serializers
 # Create your views here.
 
 
-class AuthSerializer(serializers.UserSerializer):
-
-    class Meta:
-        model = models.User
-        fields = ['email', 'password']
+class AuthSerializer(ser.Serializer):
+    email = ser.EmailField()
+    password = ser.CharField()
 
 
 class UserViewSet(
@@ -41,14 +39,17 @@ class UserViewSet(
 
     @swagger_auto_schema(methods=['POST'], request_body=AuthSerializer)
     @action(['POST'], False)
-    def auth(self, req, *args, **kwargs):
-        auth = serializers.UserSerializer(data=req.data)
+    def auth(self, req):
+        auth = AuthSerializer(data=req.data)
+        auth.is_valid(raise_exception=True)
 
-        try:
-            user, token = models.User.login(auth.initial_data['email'],
-                                            auth.initial_data['password'])
-        except Exception as e:
-            print(e)
+        email = auth.data['email']
+        password = auth.data['password']
+
+        res = models.User.login(email, password)
+        if res is not None:
+            user, token = res
+        else:
             raise exceptions.AuthenticationFailed('invalid token')
 
         return Response({
@@ -57,7 +58,7 @@ class UserViewSet(
         })
 
     @action(['GET'], False)
-    def get(self, req, *args, **kwargs):
+    def get(self, req):
         return Response(serializers.UserSerializer(req.user).data)
 
 
@@ -93,14 +94,14 @@ class CompanyViewSet(
             return super(CompanyViewSet, self).get_permissions()
 
     @action(['GET'], False)
-    def get(self, req, *args, **kwargs):
+    def get(self, req):
         c = serializers.CompanySerializer(
             req.user.work_at).data if req.user.work_at is not None else None
         return Response(c)
 
     @swagger_auto_schema(methods=['POST'], request_body=NewCompanySerializer)
     @action(['POST'], False)
-    def new(self, req, *args, **kwargs):
+    def new(self, req):
         try:
             with transaction.atomic():
                 c = models.Company.objects.create(
@@ -118,7 +119,11 @@ class CompanyViewSet(
                     work_at=c,
                 )
 
-                user, token = models.User.login(u.email, u.password)
+                res = models.User.login(u.email, u.password)
+                if res is not None:
+                    _, token = res
+                else:
+                    raise exceptions.AuthenticationFailed('invalid token')
         except Exception as e:
             e = exceptions.ValidationError(e)
             e.status_code = 422
@@ -162,7 +167,7 @@ class JobViewSet(
             return super(JobViewSet, self).get_permissions()
 
     @action(['POST'], False)
-    def new(self, req, *args, **kwargs):
+    def new(self, req):
         try:
             with transaction.atomic():
                 job = models.Job.objects.create(
@@ -188,7 +193,7 @@ class JobViewSet(
         return Response(job_ser)
 
     @action(['GET'], False)
-    def list_all(self, req, *args, **kwargs):
+    def list_all(self, req):
         try:
             title = req.query_params.get('title')
             comp = req.query_params.get('comp')
