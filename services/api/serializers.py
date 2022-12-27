@@ -32,9 +32,36 @@ class JobSkillSerializer(ModelSerializer):
         fields = '__all__'
 
 
+class NewJobSerializer(ModelSerializer):
+    skills = serializers.ListField(child=serializers.UUIDField())
+
+    class Meta:
+        depth = 1
+        model = models.Job
+        fields = '__all__'
+
+
 class JobSerializer(ModelSerializer):
 
     class Meta:
         depth = 1
         model = models.Job
+        fields = '__all__'
+
+
+class NewCompanyReviewSerializer(ModelSerializer):
+    for_company = serializers.UUIDField()
+
+    class Meta:
+        depth = 1
+        model = models.CompanyReview
+        fields = '__all__'
+
+
+class CompanyReviewSerializer(ModelSerializer):
+    rate = serializers.FloatField()
+
+    class Meta:
+        depth = 1
+        model = models.CompanyReview
         fields = '__all__'

@@ -15,10 +15,11 @@ class Auth(authentication.TokenAuthentication):
 
         try:
             token = Auth.get_token(auth_header)
-            claim = jwt.decode(token, settings.SECRET_KEY, algorithms='HS256')
+            claim = jwt.decode(token,
+                               settings.SECRET_KEY,
+                               algorithms=['HS256'])
             user = User.objects.get(pk=claim['sub'])
         except Exception as e:
-            print(e)
             raise exceptions.AuthenticationFailed('invalid token')
 
         return user, claim

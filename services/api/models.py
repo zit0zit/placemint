@@ -2,6 +2,7 @@ import jwt
 import uuid
 import datetime
 from django.db import models
+from django.core import validators
 from django.conf import settings
 from rest_framework.permissions import BasePermission
 
@@ -42,17 +43,16 @@ JobSkill:
 
 
 class Job(IdModel):
-    title = models.CharField(null=False,
-                             blank=False,
-                             max_length=100,
-                             default=None)
-    salary = models.IntegerField(default=0)
-    level = models.IntegerField(default=0)
-    location = models.CharField(max_length=200, default=None)
-    detail = models.TextField(default=None)
+    title = models.CharField(max_length=100)
+    salary = models.IntegerField(validators=[validators.MinValueValidator(0)])
+    level = models.IntegerField(validators=[
+        validators.MinValueValidator(0),
+        validators.MaxValueValidator(3),
+    ])
+    location = models.CharField(max_length=200)
+    detail = models.TextField()
     of_company = models.ForeignKey('Company',
                                    on_delete=models.CASCADE,
-                                   default=None,
                                    editable=False)
     skills = models.ManyToManyField(JobSkill, default=None)
 
@@ -177,3 +177,52 @@ User:
 
         def has_permission(self, req, view):
             return req.user.id == view.get_object().id
+
+
+class CompanyReview(IdModel):
+    rate_salary = models.FloatField(validators=[
+        validators.MinValueValidator(0),
+        validators.MaxValueValidator(5),
+    ])
+    rate_training = models.FloatField(validators=[
+        validators.MinValueValidator(0),
+        validators.MaxValueValidator(5),
+    ])
+    rate_cares = models.FloatField(validators=[
+        validators.MinValueValidator(0),
+        validators.MaxValueValidator(5),
+    ])
+    rate_fun = models.FloatField(validators=[
+        validators.MinValueValidator(0),
+        validators.MaxValueValidator(5),
+    ])
+    rate_workspace = models.FloatField(validators=[
+        validators.MinValueValidator(0),
+        validators.MaxValueValidator(5),
+    ])
+
+    title = models.CharField(max_length=50)
+    content = models.TextField()
+    for_company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    @property
+    def rate(self):
+        return sum([
+            self.rate_salary, self.rate_training, self.rate_cares,
+            self.rate_fun, self.rate_workspace
+        ]) / 5
+
+    def __str__(self):
+        return f'''
+Review:
+  Id: {self.id}
+  Rate: {self.rate}
+  Title: {self.title}
+  Company: {self.for_company}
+'''
+
+    class IsOwnReview(BasePermission):
+
+        def has_permission(self, req, view):
+            return req.user.id == view.get_object().user.id

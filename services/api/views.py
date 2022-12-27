@@ -29,7 +29,6 @@ class UserViewSet(
     }
 
     def get_permissions(self):
-        print(self.action)
         if self.action == 'get':
             return [IsAuthenticated()]
         elif self.action in ['update', 'partial_update', 'destroy']:
@@ -85,7 +84,6 @@ class CompanyViewSet(
     }
 
     def get_permissions(self):
-        print('act:', self.action)
         if self.action == 'get':
             return [IsAuthenticated()]
         elif self.action in [None, 'update', 'partial_update', 'destroy']:
@@ -158,7 +156,6 @@ class JobViewSet(
     serializer_class = serializers.JobSerializer
 
     def get_permissions(self):
-        print('act:', self.action)
         if self.action == 'new':
             return [IsAdminUser()]
         elif self.action in [None, 'update', 'partial_update', 'destroy']:
@@ -166,26 +163,29 @@ class JobViewSet(
         else:
             return super(JobViewSet, self).get_permissions()
 
+    @swagger_auto_schema(methods=['POST'],
+                         request_body=serializers.NewJobSerializer)
     @action(['POST'], False)
     def new(self, req):
+        body = serializers.NewJobSerializer(data=req.data)
+        body.is_valid(raise_exception=True)
+        body = body.data
         try:
             with transaction.atomic():
+                skills = body['skills']
+                body.pop('skills', None)
+
                 job = models.Job.objects.create(
-                    title=req.data['title'],
-                    salary=req.data['salary'],
-                    location=req.data['location'],
-                    detail=req.data['detail'],
+                    **body,
                     of_company=req.user.work_at,
                 )
 
-                skills = req.data.get('skills', [])
                 for skill in skills:
                     job.skills.add(skill)
 
                 job.save()
 
                 job_ser = serializers.JobSerializer(job).data
-                # print(job_ser)
         except Exception as e:
             e = exceptions.ValidationError(e)
             e.status_code = 422
@@ -240,3 +240,62 @@ class JobViewSet(
             e.status_code = 422
             raise e
         return Response(jobs_ser)
+
+
+class CompanyReviewViewSet(
+        mixins.UpdateModelMixin,
+        mixins.DestroyModelMixin,
+        viewsets.GenericViewSet,
+):
+    queryset = models.CompanyReview.objects.all()
+    serializer_class = serializers.CompanyReviewSerializer
+
+    def get_permissions(self):
+        if self.action == 'new':
+            return [IsAuthenticated()]
+        elif self.action in [None, 'update', 'partial_update', 'destroy']:
+            return [IsAuthenticated(), models.CompanyReview.IsOwnReview()]
+        else:
+            return super(CompanyReviewViewSet, self).get_permissions()
+
+    @swagger_auto_schema(methods=['POST'],
+                         request_body=serializers.NewCompanyReviewSerializer)
+    @action(['POST'], False)
+    def new(self, req):
+        body = serializers.NewCompanyReviewSerializer(data=req.data)
+        body.is_valid(raise_exception=True)
+        body = body.data
+        try:
+            body['user'] = req.user
+            body['for_company'] = models.Company.objects.get(
+                pk=body['for_company'])
+            review = models.CompanyReview.objects.create(**body)
+            ser = serializers.CompanyReviewSerializer(review).data
+        except Exception as e:
+            e = exceptions.ValidationError(e)
+            e.status_code = 422
+            raise e
+        return Response(ser)
+
+    @action(['GET'], False)
+    def list_all(self, req):
+        try:
+            title = req.query_params.get('title')
+            comp = req.query_params.get('comp')
+            comp_id = req.query_params.get('comp_id')
+
+            filters = {}
+            if title:
+                filters['title__icontains'] = title
+            if comp:
+                filters['for_company__name__icontains'] = comp
+            if comp_id:
+                filters['for_company__id'] = comp_id
+
+            reviews = models.CompanyReview.objects.filter(**filters)
+            ser = serializers.CompanyReviewSerializer(reviews, many=True).data
+        except Exception as e:
+            e = exceptions.ValidationError(e)
+            e.status_code = 422
+            raise e
+        return Response(ser)
