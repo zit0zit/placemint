@@ -24,6 +24,49 @@ class IdModel(TimeStampedModel):
         abstract = True
 
 
+class JobSkill(IdModel):
+    name = models.CharField(null=False, blank=False, unique=True,
+                            max_length=50, default=None)
+
+    def __str__(self):
+        return f'''
+JobSkill:
+  Id: {self.id}
+  Name: {self.name}
+'''
+
+
+class Job(IdModel):
+    title = models.CharField(null=False, blank=False,
+                             max_length=100, default=None)
+    salary = models.IntegerField(default=0)
+    level = models.IntegerField(default=0)
+    location = models.CharField(max_length=200, default=None)
+    detail = models.TextField(default=None)
+    of_company = models.ForeignKey(
+        'Company', on_delete=models.CASCADE, default=None, editable=False)
+    skills = models.ManyToManyField(JobSkill, default=None)
+
+    class Meta:
+        unique_together = ('title', 'of_company')
+
+    def __str__(self):
+        return f'''
+Job:
+  Id: {self.id}
+  Title: {self.title}
+  Salary: {self.salary}
+  Location: {self.location}
+  Company: {self.of_company}
+  Skills: {self.skills}
+'''
+
+    class IsOwnJob(BasePermission):
+        def has_permission(self, req, view):
+            return req.user.work_at is not None \
+                and view.get_object().of_company.id == req.user.work_at.id
+
+
 class Company(IdModel):
     locations = ['HCM', 'HN', 'DN', 'Others']
 

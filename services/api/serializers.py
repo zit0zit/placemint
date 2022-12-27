@@ -22,3 +22,16 @@ class CompanySerializer(ModelSerializer):
     class Meta:
         model = models.Company
         fields = '__all__'
+
+
+class JobSkillSerializer(ModelSerializer):
+    class Meta:
+        model = models.JobSkill
+        fields = '__all__'
+
+
+class JobSerializer(ModelSerializer):
+    class Meta:
+        depth = 1
+        model = models.Job
+        fields = '__all__'

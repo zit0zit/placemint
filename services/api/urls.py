@@ -19,6 +19,8 @@ router = DefaultRouter()
 
 router.register('users', views.UserViewSet, basename='users')
 router.register('companies', views.CompanyViewSet, basename='companies')
+router.register('skills', views.JobSkillViewSet, basename='skills')
+router.register('jobs', views.JobViewSet, basename='jobs')
 
 urlpatterns = router.urls
 
