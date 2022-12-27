@@ -24,6 +24,36 @@ class IdModel(TimeStampedModel):
         abstract = True
 
 
+class Company(IdModel):
+    locations = ['HCM', 'HN', 'DN', 'Others']
+
+    name = models.CharField(null=False, blank=False, unique=True,
+                            max_length=50, default=None)
+    website = models.CharField(null=False, blank=False, unique=True,
+                               max_length=50, default=None)
+    phone = models.CharField(null=False, blank=False,
+                             max_length=12, default=None)
+    location = models.IntegerField(default=1)
+    is_product = models.BooleanField(default=True)
+    about = models.TextField(null=True, blank=True, default=None)
+
+    def __str__(self):
+        return f'''
+Company:
+  Id: {self.id}
+  Name: {self.name}
+  IsProduct: {self.is_product}
+  Website: {self.website}
+  Location: {None if not (0 <= self.location <= len(Company.locations))
+  else Company.locations[self.location]}
+'''
+
+    class IsMemer(BasePermission):
+        def has_permission(self, req, view):
+            return req.user.work_at is not None \
+                and req.user.work_at.id == view.get_object().id
+
+
 class User(IdModel):
     name = models.CharField(null=False, blank=False,
                             max_length=50, default=None)
@@ -31,6 +61,9 @@ class User(IdModel):
                               unique=True, default=None)
     password = models.CharField(max_length=50)
     is_employer = models.BooleanField(default=False, editable=False)
+    work_at = models.ForeignKey(
+        Company, on_delete=models.CASCADE,
+        blank=True, null=True, default=None, editable=False)
 
     def __str__(self):
         return f'''

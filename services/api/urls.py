@@ -18,6 +18,7 @@ schema_view = get_schema_view(
 router = DefaultRouter()
 
 router.register('users', views.UserViewSet, basename='users')
+router.register('companies', views.CompanyViewSet, basename='companies')
 
 urlpatterns = router.urls
 

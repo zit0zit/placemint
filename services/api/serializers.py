@@ -11,5 +11,14 @@ class UserSerializer(ModelSerializer):
     )
 
     class Meta:
+        depth = 1
         model = models.User
+        fields = '__all__'
+
+
+class CompanySerializer(ModelSerializer):
+    location = serializers.IntegerField(default=1)
+
+    class Meta:
+        model = models.Company
         fields = '__all__'
