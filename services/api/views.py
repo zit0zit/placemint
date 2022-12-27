@@ -12,6 +12,7 @@ from . import serializers
 
 
 class AuthSerializer(serializers.UserSerializer):
+
     class Meta:
         model = models.User
         fields = ['email', 'password']
@@ -44,8 +45,8 @@ class UserViewSet(
         auth = serializers.UserSerializer(data=req.data)
 
         try:
-            user, token = models.User.login(
-                auth.initial_data['email'], auth.initial_data['password'])
+            user, token = models.User.login(auth.initial_data['email'],
+                                            auth.initial_data['password'])
         except Exception as e:
             print(e)
             raise exceptions.AuthenticationFailed('invalid token')

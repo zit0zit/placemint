@@ -4,11 +4,12 @@ from . import models
 
 
 class UserSerializer(ModelSerializer):
-    password = serializers.CharField(
-        write_only=True,
-        required=True,
-        style={'input_type': 'password', 'placeholder': 'Password'}
-    )
+    password = serializers.CharField(write_only=True,
+                                     required=True,
+                                     style={
+                                         'input_type': 'password',
+                                         'placeholder': 'Password'
+                                     })
 
     class Meta:
         depth = 1
@@ -25,12 +26,14 @@ class CompanySerializer(ModelSerializer):
 
 
 class JobSkillSerializer(ModelSerializer):
+
     class Meta:
         model = models.JobSkill
         fields = '__all__'
 
 
 class JobSerializer(ModelSerializer):
+
     class Meta:
         depth = 1
         model = models.Job

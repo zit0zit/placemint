@@ -7,6 +7,7 @@ from .models import User
 
 
 class Auth(authentication.TokenAuthentication):
+
     def authenticate(self, req):
         auth_header = req.headers.get('Authorization', None)
         if auth_header is None:
