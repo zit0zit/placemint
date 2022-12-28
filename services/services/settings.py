@@ -131,6 +131,8 @@ SWAGGER_SETTINGS = {
     }
 }
 
+CORS_ALLOWED_ORIGINS = ['http://localhost:5173']
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 

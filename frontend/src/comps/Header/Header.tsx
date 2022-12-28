@@ -1,86 +1,56 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import logo from '../../assets/logo.png'
+import useStores from '../../stores'
 import { DropDown, SubItem } from './DropDown'
 
 import './header.scss'
 
 export function Header() {
+  const { appStore } = useStores()
+  const [skills, setSkills] = useState({})
+  const [companies, setCompanies] = useState({})
+
+  useEffect(() => {
+    appStore.getSkills().then((res) => {
+      setSkills(
+        res.slice(0, 32).reduce((acc: any, sk: any) => {
+          const id = `/jobs?skill=${sk.id}`
+          acc[id] = sk.name
+          return acc
+        }, {})
+      )
+    })
+
+    appStore.getCompanies().then((res) => {
+      setCompanies(
+        res.slice(0, 24).reduce((acc: any, cp: any) => {
+          const id = `/jobs?company=${cp.id}`
+          acc[id] = cp.name
+          return acc
+        }, {})
+      )
+    })
+  }, [])
+
   const items: SubItem[] = [
     {
       index: 'skills',
       name: 'Job by skill',
-      subItems: {
-        '/skills/1': 'Java',
-        '/skills/2': 'PHP',
-        '/skills/3': 'JavaScript',
-        '/skills/4': 'HTML5',
-        '/skills/5': 'Manager',
-        '/skills/6': 'SQL',
-        '/skills/7': 'Android',
-        '/skills/8': 'iOS',
-        '/skills/9': 'MySQL',
-        '/skills/10': 'Tester',
-        '/skills/11': 'English',
-        '/skills/12': 'Ruby',
-        '/skills/13': 'Python',
-        '/skills/14': 'Mobile Apps',
-        '/skills/15': 'Ruby on Rails',
-        '/skills/16': 'QA QC',
-        '/skills/17': 'Database',
-        '/skills/18': '.NET',
-        '/skills/19': 'Business Analyst',
-        '/skills/20': 'Linux',
-        '/skills/21': 'Team Leader',
-        '/skills/22': 'NodeJS',
-        '/skills/23': 'System Engineer',
-        '/skills/24': 'Designer',
-        '/skills/25': 'UI-UX',
-        '/skills/26': 'Project Manager',
-        '/skills/27': 'OOP',
-        '/skills/28': 'Oracle',
-        '/skills/29': 'MVC',
-        '/skills/30': 'ReactJS',
-        '/skills/31': 'Embedded',
-        '/skills/32': 'J2EE',
-      },
+      subItems: skills,
     },
     {
       index: 'companies',
       name: 'Job by company',
-      subItems: {
-        '/companies/1': 'MB Bank',
-        '/companies/2': 'NAB Innovation Centre Vietnam',
-        '/companies/3': 'DEK Technologies',
-        '/companies/4': 'GFT Technologies Vietnam',
-        '/companies/5': 'Viettel Group',
-        '/companies/6': 'NFQ Asia',
-        '/companies/7': 'Niteco Vietnam Co., Ltd',
-        '/companies/8': 'Hybrid Technologies',
-        '/companies/9': 'NEC Vietnam',
-        '/companies/10': 'Daoukiwoom Innovation',
-        '/companies/11': 'Binance',
-        '/companies/12': 'Timo',
-        '/companies/13': 'Capgemini Vietnam',
-        '/companies/14': 'MONEY FORWARD VIETNAM CO.,LTD',
-        '/companies/15': 'Global Fashion Group',
-        '/companies/16': 'DSquare',
-        '/companies/17': 'BAEMIN Vietnam (Woowa Bros.)',
-        '/companies/18': 'SMG Swiss Marketplace Group',
-        '/companies/19': 'Skedulo Vietnam',
-        '/companies/20': 'Titan Technology Corporation',
-        '/companies/21': 'Asilla',
-        '/companies/22': 'VUS',
-        '/companies/23': 'Fullerton Health',
-        '/companies/24': 'Yojee',
-      },
+      subItems: companies,
     },
     {
       name: 'Job by city',
       subItems: {
-        '0': 'Ho Chi Minh',
-        '1': 'Ha Noi',
-        '2': 'Da Nang',
-        '3': 'Others',
+        '/jobs?localtion=HCM': 'Ho Chi Minh',
+        '/jobs?localtion=HN': 'Ha Noi',
+        '/jobs?localtion=DN': 'Da Nang',
+        '/jobs?localtion=Others': 'Others',
       },
     },
   ]

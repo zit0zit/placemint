@@ -21,8 +21,6 @@ function chunk<T>(arr: T[], size = 8) {
     chunks.push(arrcp.splice(0, size))
   }
 
-  console.log(chunks)
-
   return chunks
 }
 
