@@ -13,4 +13,8 @@ export default class AppStore {
   async getCompanies() {
     return utils.getCompanies()
   }
+
+  async getJobs(filters?: Record<string, string>) {
+    return utils.getJobs(filters)
+  }
 }

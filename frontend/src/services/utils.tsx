@@ -10,6 +10,13 @@ class Utils {
     const res = await axiosIntance.get('api/companies/')
     return res.data as any[]
   }
+
+  async getJobs(filters?: Record<string, string>) {
+    const res = await axiosIntance.get('api/jobs/list_all/', {
+      params: filters,
+    })
+    return res.data as any[]
+  }
 }
 
 export default new Utils()

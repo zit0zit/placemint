@@ -47,10 +47,10 @@ export function Header() {
     {
       name: 'Job by city',
       subItems: {
-        '/jobs?localtion=HCM': 'Ho Chi Minh',
-        '/jobs?localtion=HN': 'Ha Noi',
-        '/jobs?localtion=DN': 'Da Nang',
-        '/jobs?localtion=Others': 'Others',
+        '/jobs?location=HCM': 'Ho Chi Minh',
+        '/jobs?location=HN': 'Ha Noi',
+        '/jobs?location=DN': 'Da Nang',
+        '/jobs?location=Others': 'Others',
       },
     },
   ]

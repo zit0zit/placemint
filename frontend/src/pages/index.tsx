@@ -1,6 +1,6 @@
 export * from './Layout'
 export * from './Home/Home'
-export * from './Jobs'
+export * from './Jobs/Jobs'
 export * from './Skills'
 export * from './Companies'
 export * from './Reviews'
