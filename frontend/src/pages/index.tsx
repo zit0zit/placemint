@@ -1,5 +1,5 @@
 export * from './Layout'
-export * from './Home'
+export * from './Home/Home'
 export * from './Jobs'
 export * from './Skills'
 export * from './Companies'
