@@ -80,21 +80,15 @@ Job:
 class Company(IdModel):
     locations = ['HCM', 'HN', 'DN', 'Others']
 
-    name = models.CharField(null=False,
-                            blank=False,
-                            unique=True,
-                            max_length=50,
-                            default=None)
-    website = models.CharField(null=False,
-                               blank=False,
-                               unique=True,
-                               max_length=50,
-                               default=None)
-    phone = models.CharField(null=False,
-                             blank=False,
-                             max_length=12,
-                             default=None)
-    location = models.IntegerField(default=1)
+    logo = models.CharField(max_length=500, null=True, default=None)
+    name = models.CharField(unique=True, max_length=50)
+    website = models.CharField(unique=True, max_length=50)
+    phone = models.CharField(max_length=12)
+    location = models.IntegerField(default=0,
+                                   validators=[
+                                       validators.MinValueValidator(0),
+                                       validators.MaxValueValidator(3),
+                                   ])
     is_product = models.BooleanField(default=True)
     about = models.TextField(null=True, blank=True, default=None)
 
