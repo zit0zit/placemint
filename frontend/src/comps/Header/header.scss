@@ -1,0 +1,73 @@
+@import '../../scss';
+
+.header {
+  top: 0;
+  left: 0;
+  position: fixed;
+  background: $black;
+  height: 60px;
+  width: 100vw;
+  z-index: 1000;
+
+  .nav {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: inherit;
+    align-items: center;
+    justify-content: space-between;
+
+    height: 100%;
+    padding: 0 200px;
+
+    @include tablet {
+      padding: 0 80px;
+    }
+
+    @include mobile {
+      padding: 0 20px;
+    }
+
+    > a:first-child {
+      height: 100%;
+    }
+  }
+
+  color: $txt-white;
+  font-size: 15px;
+
+  .links {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: row;
+    align-items: center;
+    height: 100%;
+
+    > ul {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      height: 100%;
+
+      &:first-child {
+        margin-right: auto;
+      }
+
+      &:last-child {
+        margin-left: auto;
+      }
+
+      > li,
+      div > li {
+        display: list-item;
+        margin: 0px 10px;
+        padding: 10px 0px;
+
+        transition: color 0.3s;
+
+        &:hover {
+          color: $white;
+        }
+      }
+    }
+  }
+}

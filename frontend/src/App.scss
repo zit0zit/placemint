@@ -1,0 +1,64 @@
+@import './scss';
+
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap');
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  font-size: 100%;
+  position: relative;
+}
+
+html {
+  font-size: 100%;
+  @include tablet {
+    font-size: 80%;
+  }
+  @include mobile {
+    font-size: 60%;
+  }
+}
+
+body {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: $txt-color;
+  font-family: $main-font;
+}
+
+ul,
+li {
+  list-style-type: none;
+}
+
+button {
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+
+input {
+  outline: none;
+}
+
+a {
+  color: unset;
+  text-decoration: none;
+}
+
+.app {
+  padding-top: 60px;
+}
+
+.main {
+  min-height: 600px;
+  position: relative;
+}

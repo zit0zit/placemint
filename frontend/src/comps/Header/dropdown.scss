@@ -1,0 +1,119 @@
+@import '../../scss';
+
+.dropdown {
+  position: relative;
+  transition: all 0.3s;
+  font-size: 14px;
+
+  > .dropdown-content {
+    display: none;
+    position: absolute;
+    top: 120%;
+    background: #2e2a2b;
+    box-shadow: 3px 3px 15px rgb(0 0 0 / 50%);
+    min-width: 200px;
+    color: $white;
+
+    > ul {
+      display: block;
+
+      > li {
+        > div:first-child {
+          padding: 10px 20px;
+          border-bottom: 1px solid #222021;
+
+          &:hover {
+            background: #eee;
+            color: $black;
+
+            i {
+              border-color: $black;
+            }
+          }
+        }
+
+        a {
+          display: block;
+        }
+
+        i {
+          float: right;
+          border: solid #fff;
+          border-width: 0 1px 1px 0;
+          padding: 3px;
+          position: relative;
+          top: 10px;
+          transform: rotate(-45deg);
+        }
+
+        > .sub-menu {
+          display: none;
+          position: absolute;
+          padding: 0px 10px;
+          top: 0;
+          left: 100%;
+          color: $white;
+          background: #2e2a2b;
+          box-shadow: 3px 3px 15px rgb(0 0 0 / 50%);
+          min-width: 200px;
+
+          > .sub-list {
+            display: flex;
+
+            > div {
+              display: flex;
+              flex-direction: column;
+              padding: 0px 10px;
+
+              > a {
+                padding: 10px 20px;
+                white-space: nowrap;
+
+                &:hover {
+                  background: #eee;
+                  color: $black;
+                }
+              }
+            }
+          }
+        }
+
+        &.active {
+          > div:first-child {
+            a,
+            span {
+              font-weight: 600;
+            }
+          }
+
+          > .sub-menu {
+            display: block;
+          }
+        }
+      }
+    }
+  }
+
+  &:hover {
+    background: #2e2a2b;
+
+    > .dropdown-content {
+      display: block;
+    }
+
+    &::before {
+      --caret-width: 0.8rem;
+      content: ' ';
+      display: block;
+      position: absolute;
+      bottom: calc(var(--caret-width) * -1);
+      right: 50%;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 0 var(--caret-width) var(--caret-width);
+      border-color: transparent transparent #2e2a2b transparent;
+      transform: translateX(50%);
+    }
+  }
+}

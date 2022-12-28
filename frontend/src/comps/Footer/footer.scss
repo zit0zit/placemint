@@ -1,0 +1,60 @@
+@import '../../scss';
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 50px 200px;
+
+  @include tablet {
+    padding: 50px 80px;
+  }
+
+  @include mobile {
+    padding: 20px;
+  }
+
+  height: 301.5px;
+
+  background: $black;
+
+  font-size: 14px;
+  font-weight: 400;
+  color: #929497;
+
+  .detail {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+
+    & > div {
+      flex: 1 0 auto;
+
+      &:last-child {
+        flex: 2 0 auto;
+      }
+    }
+  }
+
+  a {
+    display: block;
+    padding: 0.2em;
+
+    .icon {
+      padding: 0.2em;
+    }
+  }
+
+  .link {
+    display: block;
+
+    &:first-child {
+      font-weight: 600;
+      color: #ffffffb8;
+    }
+  }
+
+  .contact {
+    margin-top: 1em;
+  }
+}
