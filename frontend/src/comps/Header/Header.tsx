@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import logo from '../../assets/logo.png'
 import useStores from '../../stores'
+import { getRandomSubarray } from '../../utils'
 import { DropDown, SubItem } from './DropDown'
 
 import './header.scss'
@@ -24,7 +25,7 @@ export function Header() {
 
     appStore.getCompanies().then((res) => {
       setCompanies(
-        res.slice(0, 24).reduce((acc: any, cp: any) => {
+        getRandomSubarray(res, 24).reduce((acc: any, cp: any) => {
           const id = `/jobs?company=${cp.id}`
           acc[id] = cp.name
           return acc
