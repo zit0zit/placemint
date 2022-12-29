@@ -65,7 +65,7 @@ class NewCompanySerializer(ser.Serializer):
     user_name = ser.CharField()
     email = ser.EmailField()
     password = ser.CharField()
-    comapy_name = ser.CharField(max_length=50)
+    company_name = ser.CharField(max_length=50)
     website = ser.CharField(max_length=50)
     logo = ser.CharField(max_length=500)
     phone = ser.CharField(max_length=12)
@@ -105,7 +105,7 @@ class CompanyViewSet(
             with transaction.atomic():
                 c = models.Company.objects.create(
                     logo=req.data['logo'],
-                    name=req.data['comapy_name'],
+                    name=req.data['company_name'],
                     website=req.data['website'],
                     phone=req.data['phone'],
                     location=req.data['location'],
@@ -143,7 +143,7 @@ class NewJobSerializer(ser.Serializer):
     user_name = ser.CharField()
     email = ser.EmailField()
     password = ser.CharField()
-    comapy_name = ser.CharField(max_length=50)
+    company_name = ser.CharField(max_length=50)
     website = ser.CharField(max_length=50)
     phone = ser.CharField(max_length=12)
     location = ser.IntegerField(default=1)
