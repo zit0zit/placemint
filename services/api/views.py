@@ -70,6 +70,7 @@ class NewCompanySerializer(ser.Serializer):
     logo = ser.CharField(max_length=500)
     phone = ser.CharField(max_length=12)
     location = ser.IntegerField(default=1)
+    about = ser.CharField()
 
 
 class CompanyViewSet(
@@ -109,6 +110,7 @@ class CompanyViewSet(
                     website=req.data['website'],
                     phone=req.data['phone'],
                     location=req.data['location'],
+                    about=req.data['about'],
                 )
 
                 u = models.User.objects.create(

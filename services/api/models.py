@@ -81,8 +81,8 @@ class Company(IdModel):
     locations = ['HCM', 'HN', 'DN', 'Others']
 
     logo = models.CharField(max_length=500, null=True, default=None)
-    name = models.CharField(unique=True, max_length=50)
-    website = models.CharField(unique=True, max_length=50)
+    name = models.CharField(unique=True, max_length=200)
+    website = models.CharField(unique=True, max_length=200)
     phone = models.CharField(max_length=12)
     location = models.IntegerField(default=0,
                                    validators=[
@@ -113,7 +113,7 @@ Company:
 class User(IdModel):
     name = models.CharField(null=False,
                             blank=False,
-                            max_length=50,
+                            max_length=200,
                             default=None)
     email = models.EmailField(null=False,
                               blank=False,
@@ -195,7 +195,7 @@ class CompanyReview(IdModel):
         validators.MaxValueValidator(5),
     ])
 
-    title = models.CharField(max_length=50)
+    title = models.CharField(max_length=200)
     content = models.TextField()
     for_company = models.ForeignKey(Company, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
