@@ -7,24 +7,32 @@ import { Select } from '../Select'
 import './style.scss'
 
 interface Props {
-  onSubmit: (arg: { keyword?: string; city?: string }) => void
+  onSubmit: (keyword?: string, city?: string) => void
+  showSearchIcon?: boolean
+  defaultCity?: string
 }
 
-export function SearchForm({}: Props) {
+export function SearchForm({
+  onSubmit,
+  showSearchIcon = true,
+  defaultCity = 'HCM',
+}: Props) {
   const [value, setValue] = useState('')
-  const [city, setCity] = useState('HCM')
+  const [city, setCity] = useState(defaultCity)
 
-  const onSearch = () => {
-    console.log(value, city)
+  const onSearch = (e: any) => {
+    e.preventDefault?.()
+    onSubmit(value, city != 'All' ? city : '')
+    setValue('')
   }
 
   return (
-    <div className="search-form">
+    <form className="search-form" onSubmit={onSearch}>
       <Input
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder="Keyword skill (Java, iOS...), Job Title, Company..."
-        icon={<FontAwesomeIcon icon={faSearch} />}
+        icon={showSearchIcon ? <FontAwesomeIcon icon={faSearch} /> : undefined}
       />
       <Select
         value={city}
@@ -37,7 +45,9 @@ export function SearchForm({}: Props) {
         <option value="DN">Da Nang</option>
         <option value="Others">Others</option>
       </Select>
-      <Button onClick={onSearch}>Search</Button>
-    </div>
+      <Button onClick={onSearch}>
+        {showSearchIcon ? 'Search' : <FontAwesomeIcon icon={faSearch} />}
+      </Button>
+    </form>
   )
 }

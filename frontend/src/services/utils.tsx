@@ -1,4 +1,3 @@
-import { getRandomSubarray } from '../utils'
 import axiosIntance from './custom_axios'
 
 class Utils {
@@ -17,21 +16,6 @@ class Utils {
       params: filters,
     })
     return res.data as any[]
-  }
-
-  async getTopCompanies() {
-    const topComps = getRandomSubarray(await this.getCompanies(), 8)
-    const locations = ['Ho Chi Minh', 'Ha Noi', 'Da Nang', 'Others']
-
-    return await Promise.all(
-      topComps.map(async (comp) => ({
-        id: comp.id,
-        name: comp.name,
-        num: (await this.getJobs({ comp_id: comp.id })).length,
-        city: locations[comp.location],
-        logo: comp.logo,
-      }))
-    )
   }
 }
 

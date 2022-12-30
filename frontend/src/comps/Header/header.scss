@@ -50,6 +50,21 @@
 
       &:first-child {
         margin-right: auto;
+        flex: 1 1 auto;
+
+        .search {
+          flex: 1 1 auto;
+
+          .search-form {
+            margin: 0;
+            padding: 0.3em 0;
+          }
+
+          .button {
+            width: 2.5em;
+            font-size: 18px;
+          }
+        }
       }
 
       &:last-child {

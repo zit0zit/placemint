@@ -4,9 +4,18 @@ import './style.scss'
 
 interface Props extends React.SelectHTMLAttributes<HTMLSelectElement> {
   icon?: JSX.Element
+  optionIcon?: JSX.Element
 }
 
-export function Select({ icon, children, className, onChange, value }: Props) {
+export function Select({
+  icon,
+  optionIcon,
+  children,
+  className,
+  onChange,
+  value,
+  multiple,
+}: Props) {
   const ref = useRef<HTMLSelectElement>(null)
   const refDiv = useRef<HTMLDivElement>(null)
 
@@ -19,6 +28,7 @@ export function Select({ icon, children, className, onChange, value }: Props) {
       const opt = [...ref.current.children].map((o: any) => ({
         key: o.value,
         val: o.innerText,
+        disabled: o.disabled,
       }))
       setOpts(opt)
       setRealVal(opt[ref.current.selectedIndex].val)
@@ -27,19 +37,19 @@ export function Select({ icon, children, className, onChange, value }: Props) {
   }, [ref.current?.selectedIndex])
 
   useEffect(() => {
-    document.onclick = (e) => {
+    document.addEventListener('click', (e) => {
       if (refDiv.current) {
         if (!elmContains(refDiv.current, e.target as Element)) {
           setShow(false)
         }
       }
-    }
+    })
 
-    document.onkeydown = (e) => {
+    document.addEventListener('keydown', (e) => {
       if (e.key == 'Escape') {
         setShow(false)
       }
-    }
+    })
   }, [])
 
   return (
@@ -62,13 +72,21 @@ export function Select({ icon, children, className, onChange, value }: Props) {
                 }
               }}
             >
+              {optionIcon && !o.disabled && (
+                <span className="icon">{optionIcon}</span>
+              )}{' '}
               {o.val}
             </div>
           ))}
         </div>
       </div>
       <div className="hidden">
-        <select ref={ref} onChange={onChange} defaultValue={value}>
+        <select
+          ref={ref}
+          onChange={onChange}
+          defaultValue={value}
+          multiple={multiple}
+        >
           {children}
         </select>
       </div>

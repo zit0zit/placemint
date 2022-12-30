@@ -1,38 +1,45 @@
+import { observer } from 'mobx-react-lite'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import logo from '../../assets/logo.png'
 import useStores from '../../stores'
 import { getRandomSubarray } from '../../utils'
+import { SearchForm } from '../SearchForm'
 import { DropDown, SubItem } from './DropDown'
 
 import './header.scss'
 
-export function Header() {
+function HeaderFC() {
   const { appStore } = useStores()
+
+  const navigate = useNavigate()
+  const [showSearch, setShowSearch] = useState(false)
+
+  useEffect(() => {
+    let href = document.location.href.replace(document.location.origin, '')
+    setShowSearch(href.startsWith('/jobs'))
+  }, [document.location.href])
+
   const [skills, setSkills] = useState({})
   const [companies, setCompanies] = useState({})
 
   useEffect(() => {
-    appStore.getSkills().then((res) => {
-      setSkills(
-        res.slice(0, 32).reduce((acc: any, sk: any) => {
-          const id = `/jobs?skill=${sk.id}`
-          acc[id] = sk.name
-          return acc
-        }, {})
-      )
-    })
+    setSkills(
+      appStore.skills.slice(0, 32).reduce((acc: any, sk: any) => {
+        const id = `/jobs?skill=${sk.id}`
+        acc[id] = sk.name
+        return acc
+      }, {})
+    )
 
-    appStore.getCompanies().then((res) => {
-      setCompanies(
-        getRandomSubarray(res, 24).reduce((acc: any, cp: any) => {
-          const id = `/jobs?company=${cp.id}`
-          acc[id] = cp.name
-          return acc
-        }, {})
-      )
-    })
-  }, [])
+    setCompanies(
+      getRandomSubarray(appStore.companies, 24).reduce((acc: any, cp: any) => {
+        const id = `/jobs?company=${cp.id}`
+        acc[id] = cp.name
+        return acc
+      }, {})
+    )
+  }, [appStore.skills, appStore.companies])
 
   const items: SubItem[] = [
     {
@@ -56,6 +63,18 @@ export function Header() {
     },
   ]
 
+  const onSubmit = (keyword?: string, city?: string) => {
+    let url = new URL(document.location.origin + '/jobs')
+    if (keyword) {
+      url.searchParams.set('search', keyword)
+    }
+    if (city) {
+      url.searchParams.set('location', city)
+    }
+
+    navigate(url.href.replace(url.origin, ''))
+  }
+
   return (
     <div className="header">
       <div className="nav">
@@ -72,6 +91,15 @@ export function Header() {
             <li>
               <Link to={'/reviews'}>IT Companies</Link>
             </li>
+            <li className="search">
+              {showSearch && (
+                <SearchForm
+                  onSubmit={onSubmit}
+                  showSearchIcon={false}
+                  defaultCity={'All'}
+                />
+              )}
+            </li>
           </ul>
           <ul>
             <li>
@@ -86,3 +114,5 @@ export function Header() {
     </div>
   )
 }
+
+export const Header = observer(HeaderFC)
