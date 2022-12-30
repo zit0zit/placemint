@@ -17,14 +17,16 @@
     justify-content: space-between;
 
     height: 100%;
-    padding: 0 200px;
 
-    @include tablet {
-      padding: 0 80px;
-    }
+    margin: auto;
+    max-width: 80vw;
 
     @include mobile {
-      padding: 0 20px;
+      max-width: 100vw;
+    }
+
+    @include tablet {
+      max-width: 90vw;
     }
 
     > a:first-child {
