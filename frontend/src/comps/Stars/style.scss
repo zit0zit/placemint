@@ -1,0 +1,36 @@
+@import '../../scss';
+
+.stars {
+  --size: 1.2em;
+  --font: 20px;
+
+  width: calc(var(--size) * 5);
+  font-size: var(--font);
+
+  > .rel {
+    position: relative;
+
+    > .st-ghost {
+      height: 100%;
+      position: absolute;
+      overflow: hidden;
+
+      .star {
+        position: absolute;
+      }
+
+      @for $i from 1 through 5 {
+        .star:nth-child(#{$i}) {
+          left: calc(var(--size) * (#{$i} - 1));
+        }
+      }
+    }
+  }
+
+  .star {
+    display: inline-block;
+    color: #fffd5a;
+
+    width: var(--size);
+  }
+}

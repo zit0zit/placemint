@@ -222,7 +222,11 @@ function JobsFC() {
               <div className="job-detail-header">
                 <h1>{jobs[selectedJob]?.title}</h1>
                 <div className="jdh-cpn">
-                  {jobs[selectedJob]?.of_company?.name}
+                  <Link
+                    to={'/reviews?comp=' + jobs[selectedJob]?.of_company?.id}
+                  >
+                    {jobs[selectedJob]?.of_company?.name}
+                  </Link>
                 </div>
                 <div className="jdh-apply">
                   <Button

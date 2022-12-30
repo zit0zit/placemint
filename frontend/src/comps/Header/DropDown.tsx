@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { elmContains } from '../../utils'
 import './dropdown.scss'
 
 export interface SubItem {
@@ -31,20 +32,41 @@ export function DropDown({ items, children }: Props) {
 
   useEffect(() => {
     refSubMenu.current = refSubMenu.current.slice(0, items.length)
-    updateHeight(0)
+    updateHeight(selected > 0 ? selected : 0)
   }, [items])
+
+  useEffect(() => {
+    document.addEventListener('click', (_e) => {
+      if (refContent.current) {
+        setSelected(-1)
+        refContent.current.style.display = 'none'
+        setTimeout(() => {
+          if (refContent.current) {
+            refContent.current.style.display = ''
+          }
+        })
+      }
+    })
+  }, [refContent.current])
 
   const updateHeight = (i: number) => {
     const ct = refContent.current
     const sub = refSubMenu.current[i]
-    if (ct && sub) {
+    const select = refSubMenu.current[selected]
+    if (ct && sub && select) {
       setTimeout(() => {
         ct.style.height = 'unset'
         sub.style.height = 'unset'
-        if (ct.clientHeight <= sub.clientHeight && sub.clientHeight > 0) {
-          ct.style.height = sub.clientHeight + 'px'
-        } else {
-          sub.style.height = ct.clientHeight + 'px'
+
+        const max = Math.max(
+          ct.clientHeight,
+          sub.clientHeight,
+          select.clientHeight
+        )
+
+        if (max > 0) {
+          ct.style.height = max + 'px'
+          sub.style.height = max + 'px'
         }
       })
     }

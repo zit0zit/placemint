@@ -17,6 +17,13 @@ class Utils {
     })
     return res.data as any[]
   }
+
+  async getReviews(filters?: Record<string, string>) {
+    const res = await axiosIntance.get('api/reviews/list_all/', {
+      params: filters,
+    })
+    return res.data as any[]
+  }
 }
 
 export default new Utils()

@@ -48,4 +48,8 @@ export default class AppStore {
   async getJobs(filters?: Record<string, string>) {
     return utils.getJobs(filters)
   }
+
+  async getReviews(filters?: Record<string, string>) {
+    return utils.getReviews(filters)
+  }
 }
