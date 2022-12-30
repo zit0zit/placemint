@@ -12,6 +12,7 @@ import { Button } from '../../comps/Button'
 import { Select } from '../../comps/Select'
 import useStores from '../../stores'
 import { dateDiff } from '../../utils'
+import { Job } from '../../utils/types'
 
 import './job.scss'
 
@@ -26,7 +27,7 @@ function JobsFC() {
   const { appStore } = useStores()
   const [params, setParams] = useSearchParams()
 
-  const [jobs, setJobs] = useState<any[]>([])
+  const [jobs, setJobs] = useState<Job[]>([])
   const [selectedJob, setSelectedJob] = useState(0)
 
   const [location, setLocation] = useState('Viet Nam')
@@ -49,7 +50,7 @@ function JobsFC() {
 
     if (skill) {
       filters['skill'] = skill
-      setSkill(appStore.skills.find((s) => s.id == skill)?.name)
+      setSkill(appStore.skills.find((s) => s.id == skill)?.name ?? 'IT')
     } else {
       setSkill('IT')
     }
@@ -197,9 +198,9 @@ function JobsFC() {
                     </div>
                   </div>
                   <div className="jhd-skill">
-                    {j.skills?.map((s: any, i: number) => (
+                    {j.skills?.map((s, i) => (
                       <Link key={i} to={'/jobs?skill=' + s?.id}>
-                        {s?.name}
+                        {s.name}
                       </Link>
                     ))}
                   </div>

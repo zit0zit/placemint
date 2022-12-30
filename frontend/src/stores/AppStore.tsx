@@ -1,10 +1,11 @@
 import { makeAutoObservable } from 'mobx'
 import utils from '../services/utils'
 import { getRandomSubarray } from '../utils'
+import { Company, Skill, TopCompany } from '../utils/types'
 
 export default class AppStore {
-  skills: any[]
-  companies: any[]
+  skills: Skill[]
+  companies: Company[]
 
   constructor() {
     makeAutoObservable(this)
@@ -22,11 +23,11 @@ export default class AppStore {
     this.setCompanies(comps)
   }
 
-  setSkills(skills: any[]) {
+  setSkills(skills: Skill[]) {
     this.skills = skills
   }
 
-  setCompanies(comps: any[]) {
+  setCompanies(comps: Company[]) {
     this.companies = comps
   }
 
@@ -35,13 +36,14 @@ export default class AppStore {
     const locations = ['Ho Chi Minh', 'Ha Noi', 'Da Nang', 'Others']
 
     return await Promise.all(
-      topComps.map(async (comp) => ({
-        id: comp.id,
-        name: comp.name,
-        num: (await this.getJobs({ comp_id: comp.id })).length,
-        city: locations[comp.location],
-        logo: comp.logo,
-      }))
+      topComps.map(
+        async (comp) =>
+          ({
+            ...comp,
+            num: (await this.getJobs({ comp_id: comp.id })).length,
+            city: locations[comp.location],
+          } as TopCompany)
+      )
     )
   }
 

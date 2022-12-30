@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { SearchForm } from '../../comps/SearchForm'
 import useStores from '../../stores'
 import { getRandomSubarray } from '../../utils'
+import { TopCompany } from '../../utils/types'
 import './home.scss'
 
 function HomeFC() {
@@ -12,23 +13,25 @@ function HomeFC() {
   const navigate = useNavigate()
 
   const [topSkill, setTopSkill] = useState<Record<string, string>>({})
-  const [topCompanies, setTopCompanies] = useState<Record<string, any>>({})
+  const [topCompanies, setTopCompanies] = useState<Record<string, TopCompany>>(
+    {}
+  )
 
   useEffect(() => {
     setTopSkill(
-      getRandomSubarray(appStore.skills, 8).reduce((acc: any, sk: any) => {
+      getRandomSubarray(appStore.skills, 8).reduce((acc, sk) => {
         const id = `/jobs?skill=${sk.id}`
         acc[id] = sk.name
         return acc
-      }, {})
+      }, {} as Record<string, string>)
     )
 
     appStore.getTopCompanies().then((res) => {
-      const topComps = res.reduce((acc: any, comp: any) => {
+      const topComps = res.reduce((acc, comp) => {
         const id = `/reviews?comp=${comp.id}`
         acc[id] = comp
         return acc
-      }, {})
+      }, {} as Record<string, TopCompany>)
       setTopCompanies(topComps)
     })
   }, [appStore.skills, appStore.companies])

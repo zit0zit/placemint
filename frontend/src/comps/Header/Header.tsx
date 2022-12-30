@@ -25,19 +25,19 @@ function HeaderFC() {
 
   useEffect(() => {
     setSkills(
-      appStore.skills.slice(0, 32).reduce((acc: any, sk: any) => {
+      appStore.skills.slice(0, 32).reduce((acc, sk) => {
         const id = `/jobs?skill=${sk.id}`
         acc[id] = sk.name
         return acc
-      }, {})
+      }, {} as Record<string, string>)
     )
 
     setCompanies(
-      getRandomSubarray(appStore.companies, 24).reduce((acc: any, cp: any) => {
+      getRandomSubarray(appStore.companies, 24).reduce((acc, cp) => {
         const id = `/jobs?company=${cp.id}`
         acc[id] = cp.name
         return acc
-      }, {})
+      }, {} as Record<string, string>)
     )
   }, [appStore.skills, appStore.companies])
 

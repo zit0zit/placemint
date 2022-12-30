@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom'
 import { Button } from '../../comps/Button'
 import { Stars } from '../../comps/Stars'
 import useStores from '../../stores'
+import { Company, Review } from '../../utils/types'
 import './style.scss'
 
 const locations = ['Ho Chi Minh', 'Ha Noi', 'Da Nang', 'Others']
@@ -18,8 +19,8 @@ const locations = ['Ho Chi Minh', 'Ha Noi', 'Da Nang', 'Others']
 function DetailFC({ id }: { id: string }) {
   const { appStore } = useStores()
 
-  const [comp, setComp] = useState<any>(null)
-  const [reviews, setReviews] = useState<any[]>([])
+  const [comp, setComp] = useState<Company | undefined>(undefined)
+  const [reviews, setReviews] = useState<Review[]>([])
 
   useEffect(() => {
     appStore.getReviews({ comp_id: id }).then((res) => {
@@ -38,19 +39,19 @@ function DetailFC({ id }: { id: string }) {
         <>
           <div className="ch">
             <div className="ch-logo">
-              <img src={comp?.logo} />
+              <img src={comp.logo} />
             </div>
             <div className="ch-info">
-              <h1>{comp?.name}</h1>
+              <h1>{comp.name}</h1>
               <div className="chi-items">
                 <div className="chil">
                   <FontAwesomeIcon icon={faLocationDot} />
-                  <span>{locations[comp?.location ?? 3]}</span>
+                  <span>{locations[comp.location ?? 3]}</span>
                 </div>
                 <div className="chip">
                   <FontAwesomeIcon icon={faGear} />
                   <span>
-                    {comp?.is_product ?? true ? 'Product' : 'Outsourcing'}
+                    {comp.is_product ?? true ? 'Product' : 'Outsourcing'}
                   </span>
                 </div>
               </div>
@@ -64,7 +65,7 @@ function DetailFC({ id }: { id: string }) {
               <>
                 <li>
                   <li>
-                    <Link to={'/jobs?company=' + comp?.id}>
+                    <Link to={'/jobs?company=' + comp.id}>
                       <span>Jobs</span>
                     </Link>
                   </li>
@@ -73,7 +74,7 @@ function DetailFC({ id }: { id: string }) {
                   </li>
                 </li>
                 <li>
-                  <a href={comp?.website} target="_blank">
+                  <a href={comp.website} target="_blank">
                     <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
                   </a>
                 </li>
@@ -87,7 +88,7 @@ function DetailFC({ id }: { id: string }) {
                   <div className="hl">
                     <h3>{`${reviews.length} Employee Reviews`}</h3>
                   </div>
-                  {reviews.map((r: any, i: number) => (
+                  {reviews.map((r, i) => (
                     <div className="rv" key={i}>
                       <div className="rvh">
                         <h3>{r.title}</h3>
@@ -144,7 +145,7 @@ function DetailFC({ id }: { id: string }) {
                         </div>
                       </div>
                       <div className="rvb">
-                        {r.content?.split('\n').map((c: any, i: number) => (
+                        {r.content?.split('\n').map((c, i) => (
                           <div key={i}>{c}</div>
                         ))}
                       </div>
