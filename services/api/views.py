@@ -1,4 +1,5 @@
 from django.db import transaction
+from django.db.models import Q
 from rest_framework import viewsets, exceptions, mixins, serializers as ser
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
@@ -210,34 +211,38 @@ class JobViewSet(
             level = req.query_params.get('level', '')
             level = list(map(int, level.split(',') if level else []))
 
-            filters = {}
+            filters = Q()
             if title:
-                filters['title__icontains'] = title
+                filters &= Q(title__icontains=title)
             if comp:
-                filters['of_company__name__icontains'] = comp
+                filters &= Q(of_company__name__icontains=comp)
             if comp_id:
-                filters['of_company__id'] = comp_id
+                filters &= Q(of_company__id=comp_id)
             if skill:
-                filters['skills'] = skill
+                filters &= Q(skills=skill)
             if skill_name:
-                filters['skills__name__icontains'] = skill_name
+                filters &= Q(skills__name__icontains=skill_name)
             if location:
-                filters['of_company__location'] = location
+                filters &= Q(of_company__location=location)
             if product:
-                filters['of_company__is_product'] = product == 'true'
+                filters &= Q(of_company__is_product=(product == 'true'))
             if level:
-                filters['level__in'] = level
+                filters &= Q(level__in=level)
 
+            salary_filter = None
             if salary == '0':
-                filters['salary__gte'] = 500
+                salary_filter = Q(salary__gte=500)
             elif salary == '1':
-                filters['salary__gte'] = 1000
+                salary_filter = Q(salary__gte=1000)
             elif salary == '2':
-                filters['salary__gte'] = 2000
+                salary_filter = Q(salary__gte=2000)
             elif salary == '3':
-                filters['salary__gte'] = 2500
+                salary_filter = Q(salary__gte=2500)
+            if salary_filter:
+                salary_filter = salary_filter | Q(salary=0)
+                filters &= salary_filter
 
-            jobs = models.Job.objects.filter(**filters)
+            jobs = models.Job.objects.filter(filters)
             jobs_ser = serializers.JobSerializer(jobs, many=True).data
         except Exception as e:
             e = exceptions.ValidationError(e)
