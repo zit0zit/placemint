@@ -7,6 +7,7 @@ import {
   Layout,
   Reviews,
   Signin,
+  Signup,
   Skills,
 } from './pages'
 import './App.scss'
@@ -24,6 +25,7 @@ function App() {
             <Route path="/reviews" element={<Reviews />} />
             <Route path="/for-empolyer" element={<Empolyer />} />
             <Route path="/signin" element={<Signin />} />
+            <Route path="/signup" element={<Signup />} />
           </Route>
         </Routes>
       </BrowserRouter>

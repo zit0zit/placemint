@@ -12,6 +12,9 @@ export function Input({
   value,
   onChange,
   className,
+  name,
+  checked,
+  required,
 }: Props) {
   return (
     <div className={'input ' + (className ?? '')}>
@@ -21,6 +24,9 @@ export function Input({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        name={name}
+        checked={checked}
+        required={required}
       />
     </div>
   )
