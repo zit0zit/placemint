@@ -1,3 +1,5 @@
+export type NullAble<T> = T | null
+
 export interface Model {
   created: Date | string
   updated: Date | string
@@ -17,7 +19,7 @@ export interface Company extends Model {
   location: number
   is_product: boolean
   about: string
-  rate?: number;
+  rate?: number
 }
 
 export interface Job extends Model {

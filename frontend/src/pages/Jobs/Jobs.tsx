@@ -7,7 +7,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { observer } from 'mobx-react-lite'
 import { useEffect, useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { Button } from '../../comps/Button'
 import { Select } from '../../comps/Select'
 import useStores from '../../stores'
@@ -24,8 +24,10 @@ const locations: Record<string, string> = {
 }
 
 function JobsFC() {
-  const { appStore } = useStores()
+  const { appStore, userStore } = useStores()
   const [params, setParams] = useSearchParams()
+
+  const navigate = useNavigate()
 
   const [jobs, setJobs] = useState<Job[]>([])
   const [selectedJob, setSelectedJob] = useState(0)
@@ -122,7 +124,11 @@ function JobsFC() {
     setParams(() => ({ ...olds, ...filter }))
   }
 
-  const onApply = (job: any) => {}
+  const onApply = (job: any) => {
+    if (!userStore.isAuth) {
+      navigate('/signin')
+    }
+  }
 
   return (
     <div className="jobs">

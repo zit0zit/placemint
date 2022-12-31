@@ -11,7 +11,7 @@ const axiosIntance = axios.create({
 axiosIntance.interceptors.request.use((cfg) => {
   const token = localStorage.getItem('token')
   if (cfg.headers && token) {
-    cfg.headers['Authorization'] = `${token && JSON.parse(token)}`
+    cfg.headers['Authorization'] = token
   }
   return cfg
 })

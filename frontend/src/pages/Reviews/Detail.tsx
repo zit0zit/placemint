@@ -7,7 +7,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { observer } from 'mobx-react-lite'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '../../comps/Button'
 import { Stars } from '../../comps/Stars'
 import useStores from '../../stores'
@@ -17,7 +17,9 @@ import './style.scss'
 const locations = ['Ho Chi Minh', 'Ha Noi', 'Da Nang', 'Others']
 
 function DetailFC({ id }: { id: string }) {
-  const { appStore } = useStores()
+  const { appStore, userStore } = useStores()
+
+  const navtigate = useNavigate()
 
   const [comp, setComp] = useState<Company | undefined>(undefined)
   const [reviews, setReviews] = useState<Review[]>([])
@@ -32,6 +34,12 @@ function DetailFC({ id }: { id: string }) {
     const comp = appStore.companies.find((c) => c.id == id)
     setComp(comp)
   }, [appStore.companies, id])
+
+  const onClick = () => {
+    if (!userStore.isAuth) {
+      navtigate('/signin')
+    }
+  }
 
   return (
     <div className="detail">
@@ -57,7 +65,7 @@ function DetailFC({ id }: { id: string }) {
               </div>
             </div>
             <div className="ch-actions">
-              <Button>Write review</Button>
+              <Button onClick={onClick}>Write review</Button>
             </div>
           </div>
           <ul>

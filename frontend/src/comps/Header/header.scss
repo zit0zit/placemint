@@ -87,4 +87,15 @@
       }
     }
   }
+
+  .user-items {
+    .arrow {
+      display: none;
+    }
+
+    .dropdown-content {
+      right: 0;
+      min-width: 150px;
+    }
+  }
 }

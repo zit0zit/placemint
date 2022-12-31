@@ -10,7 +10,11 @@ import { DropDown, SubItem } from './DropDown'
 import './header.scss'
 
 function HeaderFC() {
-  const { appStore } = useStores()
+  const { appStore, userStore } = useStores()
+
+  useEffect(() => {
+    userStore.loadUser()
+  }, [])
 
   const navigate = useNavigate()
   const [showSearch, setShowSearch] = useState(false)
@@ -63,6 +67,27 @@ function HeaderFC() {
     },
   ]
 
+  const userItems: SubItem[] = [
+    {
+      index: 'account',
+      name: 'My Account',
+      subItems: {},
+    },
+    {
+      index: 'applied',
+      name: 'Applied Job',
+      subItems: {},
+    },
+    {
+      index: '#',
+      name: 'SignOut',
+      subItems: {},
+      onClick: () => {
+        userStore.signOut()
+      },
+    },
+  ]
+
   const onSubmit = (keyword?: string, city?: string) => {
     let url = new URL(document.location.origin + '/jobs')
     if (keyword) {
@@ -102,12 +127,20 @@ function HeaderFC() {
             </li>
           </ul>
           <ul>
-            <li>
-              <Link to={'/for-empolyer'}>For Employers</Link>
-            </li>
-            <li>
-              <Link to={'/signin'}>Sign In</Link>
-            </li>
+            {userStore.user ? (
+              <DropDown items={userItems} className="user-items">
+                <li>{userStore.user.name}</li>
+              </DropDown>
+            ) : (
+              <>
+                <li>
+                  <Link to={'/for-empolyer'}>For Employers</Link>
+                </li>
+                <li>
+                  <Link to={'/signin'}>Sign In</Link>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </div>

@@ -1,17 +1,18 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { elmContains } from '../../utils'
 import './dropdown.scss'
 
 export interface SubItem {
   index?: string
   name: string
   subItems: Record<string, string>
+  onClick?: Function
 }
 
 interface Props {
   items: SubItem[]
   children: JSX.Element
+  className?: string
 }
 
 function chunk<T>(arr: T[], size = 8) {
@@ -25,7 +26,7 @@ function chunk<T>(arr: T[], size = 8) {
   return chunks
 }
 
-export function DropDown({ items, children }: Props) {
+export function DropDown({ items, children, className }: Props) {
   const [selected, setSelected] = useState(-1)
   const refContent = useRef<HTMLDivElement>(null)
   const refSubMenu = useRef<(HTMLDivElement | null)[]>([])
@@ -73,7 +74,7 @@ export function DropDown({ items, children }: Props) {
   }
 
   return (
-    <div className="dropdown">
+    <div className={'dropdown ' + (className ?? '')}>
       {children}
       <div className="dropdown-content" ref={refContent}>
         <ul>
@@ -86,7 +87,7 @@ export function DropDown({ items, children }: Props) {
                 updateHeight(i)
               }}
             >
-              <div>
+              <div onClick={it.onClick ? () => it.onClick?.() : undefined}>
                 {it.index ? (
                   <Link to={it.index}>
                     {it.name}
@@ -99,33 +100,35 @@ export function DropDown({ items, children }: Props) {
                   </span>
                 )}
               </div>
-              <div
-                className="sub-menu"
-                ref={(el) => (refSubMenu.current[i] = el)}
-              >
-                <div className="sub-list">
-                  {chunk(Object.keys(it.subItems)).map((ck, i) => (
-                    <div key={i}>
-                      {ck.map((k, i) => (
-                        <Link to={k} key={i}>
-                          {it.subItems[k]}
-                        </Link>
-                      ))}
-                    </div>
-                  ))}
+              {Object.values(it.subItems).length > 0 && (
+                <div
+                  className="sub-menu"
+                  ref={(el) => (refSubMenu.current[i] = el)}
+                >
+                  <div className="sub-list">
+                    {chunk(Object.keys(it.subItems)).map((ck, i) => (
+                      <div key={i}>
+                        {ck.map((k, i) => (
+                          <Link to={k} key={i}>
+                            {it.subItems[k]}
+                          </Link>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                  {it.index && Object.values(it.subItems).length > 0 && (
+                    <span
+                      style={{
+                        float: 'right',
+                        textDecoration: 'underline',
+                        paddingTop: '.5em',
+                      }}
+                    >
+                      <Link to={it.index}>View all {it.name}</Link>
+                    </span>
+                  )}
                 </div>
-                {it.index && (
-                  <span
-                    style={{
-                      float: 'right',
-                      textDecoration: 'underline',
-                      paddingTop: '.5em',
-                    }}
-                  >
-                    <Link to={it.index}>View all {it.name}</Link>
-                  </span>
-                )}
-              </div>
+              )}
             </li>
           ))}
         </ul>

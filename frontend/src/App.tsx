@@ -1,5 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import {
+  Account,
+  Applied,
   Companies,
   Empolyer,
   Home,
@@ -26,6 +28,8 @@ function App() {
             <Route path="/for-empolyer" element={<Empolyer />} />
             <Route path="/signin" element={<Signin />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/account" element={<Account />} />
+            <Route path="/applied" element={<Applied />} />
           </Route>
         </Routes>
       </BrowserRouter>
