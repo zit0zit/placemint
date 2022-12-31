@@ -139,6 +139,11 @@
               outline: 0;
 
               margin-right: 1rem;
+
+              &:hover {
+                background-color: #ed4753;
+                border-color: #ec3c49;
+              }
             }
 
             a {

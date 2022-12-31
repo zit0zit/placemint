@@ -83,8 +83,10 @@ interface ExcludeJob {
   skills: any
   updated: any
   created: any
+  of_company: any
 }
 
 export interface CreateJob extends Omit<Job, keyof ExcludeJob> {
   skills: string[]
+  of_company: string
 }

@@ -158,9 +158,10 @@ class JobViewSet(
         viewsets.GenericViewSet,
 ):
     queryset = models.Job.objects.all()
-    serializer_class = serializers.JobSerializer
+    serializer_class = serializers.NewJobSerializer
 
     def get_permissions(self):
+        print(self.action)
         if self.action == 'new':
             return [IsAdminUser()]
         elif self.action in [None, 'update', 'partial_update', 'destroy']:

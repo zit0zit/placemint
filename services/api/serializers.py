@@ -33,7 +33,11 @@ class JobSkillSerializer(ModelSerializer):
 
 
 class NewJobSerializer(ModelSerializer):
-    skills = serializers.ListField(child=serializers.UUIDField())
+    skills = serializers.ListField(child=serializers.UUIDField(), write_only=True)
+
+    def to_representation(self, instance):
+        serializer = JobSerializer(instance)
+        return serializer.data
 
     class Meta:
         depth = 1

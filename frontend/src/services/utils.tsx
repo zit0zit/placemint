@@ -16,7 +16,11 @@ class Utils {
     const res = await axiosIntance.get('api/jobs/list_all/', {
       params: filters,
     })
-    return res.data as Job[]
+    const jobs = res.data as Job[]
+
+    return jobs.sort(
+      (a, b) => new Date(b.updated).valueOf() - new Date(a.updated).valueOf()
+    )
   }
 
   async getReviews(filters?: Record<string, string>) {

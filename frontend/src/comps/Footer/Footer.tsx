@@ -50,6 +50,9 @@ export function Footer() {
               <FontAwesomeIcon icon={faYoutube} />
             </span>
           </Link>
+          <Link to={'#'}>Ngô Lê Bảo Duy_17520397</Link>
+          <Link to={'#'}>NT208.N11.ANTT</Link>
+          <Link to={'#'}>Giảng viên hướng dẫn : thầy Trần Tuấn Dũng</Link>
         </div>
       </div>
       <div className="contact">

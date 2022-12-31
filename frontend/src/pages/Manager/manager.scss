@@ -11,6 +11,10 @@
   @include tablet {
     max-width: 90vw;
   }
+
+  .err {
+    color: $red;
+  }
 }
 
 .manager .detail {
@@ -98,6 +102,11 @@
         display: inline-block;
         text-align: center;
         color: #fff;
+
+        &:hover {
+          background-color: #ed4753;
+          border-color: #ec3c49;
+        }
       }
     }
   }
@@ -471,6 +480,102 @@
       margin: 0.3em;
       font-size: 30px;
       font-weight: normal;
+    }
+  }
+}
+
+.manager {
+  .modal {
+    display: none;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+
+    top: 0;
+    left: 0;
+    z-index: 2000;
+
+    background-color: transparent;
+
+    .toad {
+      position: relative;
+      top: 10%;
+      max-height: 85vh;
+      overflow: auto;
+      margin: auto;
+      padding: 2em;
+      background: $white;
+
+      border-radius: 0.5em;
+      box-shadow: 0.1em 0.1em 2em 0.5em $txt-gray;
+
+      width: 50%;
+
+      @include mobile {
+        width: 90%;
+      }
+
+      @include tablet {
+        width: 80%;
+      }
+    }
+  }
+
+  .new-job {
+    .input input[type='text'],
+    .input input[type='number'],
+    textarea {
+      height: 2.8em;
+      font-size: 14px;
+      display: block;
+      width: 100%;
+      padding: 0.375rem 0.75rem;
+      font-weight: 400;
+      line-height: 1.5;
+      color: #212529;
+      background-color: #fff;
+      background-clip: padding-box;
+      border: 1px solid #ced4da;
+      appearance: none;
+      border-radius: 0.25rem;
+      transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+    .choices {
+      display: flex;
+      justify-content: space-between;
+
+      > div * {
+        display: inline-block;
+      }
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 100px;
+      margin-bottom: 1em;
+      outline: none;
+      resize: vertical;
+    }
+
+    .button {
+      font-family: 'Roboto', sans-serif;
+      padding: 0 15px;
+      height: 37px;
+      color: #fff;
+      border: 0;
+      border-radius: 4px;
+      font-size: 18px;
+      background-color: #ea1e30;
+      -webkit-font-smoothing: antialiased;
+      outline: 0;
+
+      margin-right: 1rem;
+
+      &:hover {
+        background-color: #ed4753;
+        border-color: #ec3c49;
+      }
     }
   }
 }
