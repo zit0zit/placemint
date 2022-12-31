@@ -23,6 +23,157 @@ const locations: Record<string, string> = {
   Others: 'Others',
 }
 
+export interface JobListProps {
+  jobs: Job[]
+  selectedJob: number
+  setSelectedJob: Function
+  onAction: Function
+  show?: boolean
+  skill?: string
+  location?: string
+}
+
+export function JobList({
+  jobs,
+  skill,
+  location,
+  selectedJob,
+  setSelectedJob,
+  onAction,
+  show = true,
+}: JobListProps) {
+  return (
+    <div className="job-list">
+      <div className="job-list-header">
+        <div className="job-list-header-inner">
+          {show && (
+            <>
+              {jobs.length > 0 ? (
+                <h2>
+                  {jobs.length} {skill} Jobs in {location}
+                </h2>
+              ) : (
+                <div className="notfound">
+                  <h2>Oops!</h2>
+                  <h3>The job you're looking for doesn't exist.</h3>
+                </div>
+              )}
+            </>
+          )}
+          {jobs.map((j, i) => (
+            <div
+              key={i}
+              className={'job-header' + (i == selectedJob ? ' selected' : '')}
+              onClick={() => setSelectedJob(i)}
+            >
+              <div className="jh-logo">
+                <img src={j.of_company?.logo} />
+              </div>
+              <div className="jh-detail">
+                <div className="jhd-body">
+                  <div className="jhdb-title">
+                    <h3>{j.title}</h3>
+                  </div>
+                  <div className="jhdb-salary">
+                    <FontAwesomeIcon icon={faSackDollar} />
+                    <span>
+                      {j.salary ? j.salary + ' USD' : "You'll love it"}
+                    </span>
+                  </div>
+                </div>
+                <div className="jhd-skill">
+                  {j.skills?.map((s, i) => (
+                    <Link key={i} to={'/jobs?skill=' + s?.id}>
+                      {s.name}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+              <div className="jh-post">
+                <div className="jhp-city">
+                  {Object.values(locations)[j.of_company?.location]}
+                </div>
+                <div className="jhp-date">
+                  {dateDiff(new Date(j.updated), new Date())}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="job-preview">
+        {jobs.length > 0 && jobs[selectedJob] && (
+          <div className="job-detail">
+            <div className="job-detail-header">
+              <h1>{jobs[selectedJob]?.title}</h1>
+              <div className="jdh-cpn">
+                <Link to={'/reviews?comp=' + jobs[selectedJob]?.of_company?.id}>
+                  {jobs[selectedJob]?.of_company?.name}
+                </Link>
+              </div>
+              <div className="jdh-apply">
+                <Button
+                  className="jdh-apply-btn"
+                  onClick={() => onAction(jobs[selectedJob])}
+                >
+                  {show ? 'Apply now' : 'Edit'}
+                </Button>
+              </div>
+            </div>
+            <div className="job-detail-overview">
+              <div className="jhd-skill">
+                {jobs[selectedJob]?.skills?.map((s: any, i: number) => (
+                  <Link key={i} to={'/jobs?skill=' + s?.id}>
+                    {s?.name}
+                  </Link>
+                ))}
+              </div>
+              <div className="jhdb-salary">
+                <FontAwesomeIcon icon={faSackDollar} />
+                <span>
+                  {jobs[selectedJob]?.salary
+                    ? jobs[selectedJob]?.salary + ' USD'
+                    : "You'll love it"}
+                </span>
+              </div>
+              <div className="jdo-location">
+                <FontAwesomeIcon icon={faLocationDot} />
+                <span>{jobs[selectedJob]?.location}</span>
+                <span>
+                  <a
+                    href={
+                      'https://google.com/maps?q=' + jobs[selectedJob]?.location
+                    }
+                    target="_blank"
+                  >
+                    See map
+                  </a>
+                </span>
+              </div>
+            </div>
+            <div className="job-about">
+              {jobs[selectedJob]?.detail
+                ?.split('\n\n')
+                .map((deltail: string, i: number) => (
+                  <div className="ja-para" key={i}>
+                    <ul>
+                      {deltail.split('\n').map((d, i) => (
+                        <li className="jap-li" key={i}>
+                          {d}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+            </div>
+            <div className="job-company"></div>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
 function JobsFC() {
   const { appStore, userStore } = useStores()
   const [params, setParams] = useSearchParams()
@@ -169,133 +320,14 @@ function JobsFC() {
           <Link to={'/jobs'}>Clear all filters</Link>
         </div>
       </div>
-      <div className="job-list">
-        <div className="job-list-header">
-          <div className="job-list-header-inner">
-            {jobs.length > 0 ? (
-              <h2>
-                {jobs.length} {skill} Jobs in {location}
-              </h2>
-            ) : (
-              <div className="notfound">
-                <h2>Oops!</h2>
-                <h3>The job you're looking for doesn't exist.</h3>
-              </div>
-            )}
-            {jobs.map((j, i) => (
-              <div
-                key={i}
-                className={'job-header' + (i == selectedJob ? ' selected' : '')}
-                onClick={() => setSelectedJob(i)}
-              >
-                <div className="jh-logo">
-                  <img src={j.of_company?.logo} />
-                </div>
-                <div className="jh-detail">
-                  <div className="jhd-body">
-                    <div className="jhdb-title">
-                      <h3>{j.title}</h3>
-                    </div>
-                    <div className="jhdb-salary">
-                      <FontAwesomeIcon icon={faSackDollar} />
-                      <span>
-                        {j.salary ? j.salary + ' USD' : "You'll love it"}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="jhd-skill">
-                    {j.skills?.map((s, i) => (
-                      <Link key={i} to={'/jobs?skill=' + s?.id}>
-                        {s.name}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-                <div className="jh-post">
-                  <div className="jhp-city">
-                    {Object.values(locations)[j.of_company?.location]}
-                  </div>
-                  <div className="jhp-date">
-                    {dateDiff(new Date(j.updated), new Date())}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="job-preview">
-          {jobs.length > 0 && jobs[selectedJob] && (
-            <div className="job-detail">
-              <div className="job-detail-header">
-                <h1>{jobs[selectedJob]?.title}</h1>
-                <div className="jdh-cpn">
-                  <Link
-                    to={'/reviews?comp=' + jobs[selectedJob]?.of_company?.id}
-                  >
-                    {jobs[selectedJob]?.of_company?.name}
-                  </Link>
-                </div>
-                <div className="jdh-apply">
-                  <Button
-                    className="jdh-apply-btn"
-                    onClick={() => onApply(jobs[selectedJob])}
-                  >
-                    Apply now
-                  </Button>
-                </div>
-              </div>
-              <div className="job-detail-overview">
-                <div className="jhd-skill">
-                  {jobs[selectedJob]?.skills?.map((s: any, i: number) => (
-                    <Link key={i} to={'/jobs?skill=' + s?.id}>
-                      {s?.name}
-                    </Link>
-                  ))}
-                </div>
-                <div className="jhdb-salary">
-                  <FontAwesomeIcon icon={faSackDollar} />
-                  <span>
-                    {jobs[selectedJob]?.salary
-                      ? jobs[selectedJob]?.salary + ' USD'
-                      : "You'll love it"}
-                  </span>
-                </div>
-                <div className="jdo-location">
-                  <FontAwesomeIcon icon={faLocationDot} />
-                  <span>{jobs[selectedJob]?.location}</span>
-                  <span>
-                    <a
-                      href={
-                        'https://google.com/maps?q=' +
-                        jobs[selectedJob]?.location
-                      }
-                      target="_blank"
-                    >
-                      See map
-                    </a>
-                  </span>
-                </div>
-              </div>
-              <div className="job-about">
-                {jobs[selectedJob]?.detail
-                  ?.split('\n\n')
-                  .map((deltail: string, i: number) => (
-                    <div className="ja-para" key={i}>
-                      <ul>
-                        {deltail.split('\n').map((d, i) => (
-                          <li className="jap-li" key={i}>
-                            {d}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-              </div>
-              <div className="job-company"></div>
-            </div>
-          )}
-        </div>
-      </div>
+      <JobList
+        jobs={jobs}
+        selectedJob={selectedJob}
+        setSelectedJob={setSelectedJob}
+        onAction={onApply}
+        skill={skill}
+        location={location}
+      />
     </div>
   )
 }

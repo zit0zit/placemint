@@ -62,3 +62,29 @@ export interface TopCompany {
   city: string
   logo: string
 }
+
+interface ExcludeComp {
+  id: any
+  name: any
+  is_employer: any
+  updated: any
+  created: any
+}
+
+export interface CreateCompany
+  extends Omit<Company, keyof ExcludeComp>,
+    Omit<User, keyof ExcludeComp> {
+  company_name: string
+  user_name: string
+}
+
+interface ExcludeJob {
+  id: any
+  skills: any
+  updated: any
+  created: any
+}
+
+export interface CreateJob extends Omit<Job, keyof ExcludeJob> {
+  skills: string[]
+}

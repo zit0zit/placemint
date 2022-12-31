@@ -18,6 +18,7 @@ function HeaderFC() {
 
   const navigate = useNavigate()
   const [showSearch, setShowSearch] = useState(false)
+  const [userItems, setUserItems] = useState<SubItem[]>([])
 
   useEffect(() => {
     let href = document.location.href.replace(document.location.origin, '')
@@ -67,26 +68,30 @@ function HeaderFC() {
     },
   ]
 
-  const userItems: SubItem[] = [
-    {
-      index: 'account',
-      name: 'My Account',
-      subItems: {},
-    },
-    {
-      index: 'applied',
-      name: 'Applied Job',
-      subItems: {},
-    },
-    {
-      index: '#',
-      name: 'SignOut',
-      subItems: {},
-      onClick: () => {
-        userStore.signOut()
+  useEffect(() => {
+    const userItems: SubItem[] = [
+      {
+        index: 'account',
+        name: 'My Account',
+        subItems: {},
       },
-    },
-  ]
+      {
+        index: userStore.user?.is_employer ? 'manager' : 'mapplied',
+        name: userStore.user?.is_employer ? 'Manage Jobs' : 'Applied Job',
+        subItems: {},
+      },
+      {
+        index: '#',
+        name: 'SignOut',
+        subItems: {},
+        onClick: () => {
+          userStore.signOut()
+        },
+      },
+    ]
+
+    setUserItems(userItems)
+  }, [userStore.user])
 
   const onSubmit = (keyword?: string, city?: string) => {
     let url = new URL(document.location.origin + '/jobs')
@@ -134,7 +139,7 @@ function HeaderFC() {
             ) : (
               <>
                 <li>
-                  <Link to={'/for-empolyer'}>For Employers</Link>
+                  <Link to={'/for-employer'}>For Employers</Link>
                 </li>
                 <li>
                   <Link to={'/signin'}>Sign In</Link>

@@ -1,5 +1,6 @@
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { observer } from 'mobx-react-lite'
 import { FormEvent, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import logo from '../../assets/logo.png'
@@ -8,7 +9,7 @@ import { Input } from '../../comps/Input'
 import useStores from '../../stores'
 import './signin.scss'
 
-export function Signin() {
+function SigninFC() {
   const { userStore } = useStores()
 
   const navigate = useNavigate()
@@ -121,3 +122,5 @@ export function Signin() {
     </div>
   )
 }
+
+export const Signin = observer(SigninFC)

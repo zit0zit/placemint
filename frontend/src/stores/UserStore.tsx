@@ -22,6 +22,12 @@ export default class UserStore {
     localStorage.removeItem('token')
   }
 
+  setUser(token: string, user: User) {
+    this.storeToken(token)
+    this.isAuth = true
+    this.user = user
+  }
+
   async signIn(email: string, password: string) {
     try {
       const data = await UserService.signIn(email, password)
@@ -96,10 +102,7 @@ export default class UserStore {
   }
 
   async loadUser() {
-    const token = this.getToken()
-    if (!token) return
-
-    const user = await UserService.getInfo(token).catch(() => null)
+    const user = await UserService.getInfo().catch(() => null)
     if (user) {
       this.isAuth = true
       this.user = user

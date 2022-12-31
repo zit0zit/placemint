@@ -2,12 +2,8 @@ import { User } from '../utils/types'
 import axiosIntance from './custom_axios'
 
 class UserService {
-  async getInfo(token: string) {
-    const res = await axiosIntance.get('/api/users/get/', {
-      headers: {
-        Authorization: token,
-      },
-    })
+  async getInfo() {
+    const res = await axiosIntance.get('/api/users/get/')
     return res.data as User
   }
 

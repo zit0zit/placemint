@@ -1,3 +1,4 @@
+import { observer } from 'mobx-react-lite'
 import { FormEvent, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import logo from '../../assets/logo.png'
@@ -7,7 +8,7 @@ import { Input } from '../../comps/Input'
 import useStores from '../../stores'
 import './signin.scss'
 
-export function Signup() {
+function SignupFC() {
   const { userStore } = useStores()
 
   const navigate = useNavigate()
@@ -109,3 +110,5 @@ export function Signup() {
     </div>
   )
 }
+
+export const Signup = observer(SignupFC)
